@@ -23,7 +23,7 @@ describe("Testing basic database functionality", () => {
   });
 
   it("should delete task", async () => {
-    const response = await fetch("http://localhost:3001/delete/2", {
+    const response = await fetch("http://localhost:3001/delete/1", {
       method: "delete",
     });
     const data = await response.json();
@@ -42,5 +42,17 @@ describe("Testing basic database functionality", () => {
     expect(data).to.include.all.keys("error");
   });
 
-
+  it("should sign up", async () => {
+    const newUser = { email: "foo@test.com", password: "password123" };
+    const response = await fetch("http://localhost:3001/user/signup", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user: newUser })
+    });
+    const data = await response.json();
+    expect(response.status).to.equal(201);
+    expect(data).to.include.all.keys(["id", "email"]);
+    expect(data.email).to.equal(newUser.email);
+  });
 });
+    
