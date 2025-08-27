@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import todoRouter from "./routes/todoRouter.js";
 
+
+// SMALL CHANGES
 const environment = process.env.NODE_ENV;
 dotenv.config();
 
