@@ -1,6 +1,12 @@
 import { expect } from "chai";
+import { initializeTestDb } from "./helper/test.js";
 
 describe("Testing basic database functionality", () => {
+
+before(() => {
+ initializeTestDb()
+ })
+
   it("should get all tasks", async () => {
     const response = await fetch("http://localhost:3001/");
     const data = await response.json();
@@ -41,9 +47,11 @@ describe("Testing basic database functionality", () => {
     expect(response.status).to.equal(400);
     expect(data).to.include.all.keys("error");
   });
+  });
 
+describe("Testing basic database functionality", () => {
   it("should sign up", async () => {
-    const newUser = { email: "foo@test.com", password: "password123" };
+    const newUser = { email: "fool@test.com", password: "password123" };
     const response = await fetch("http://localhost:3001/user/signup", {
       method: "post",
       headers: { "Content-Type": "application/json" },
@@ -54,5 +62,5 @@ describe("Testing basic database functionality", () => {
     expect(data).to.include.all.keys(["id", "email"]);
     expect(data.email).to.equal(newUser.email);
   });
+
 });
-    
