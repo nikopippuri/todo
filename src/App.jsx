@@ -4,6 +4,7 @@ import axios from "axios";
 import Row from "./components/Row.jsx";
 import { useUser } from "./context/useUser";
 
+
 const url = "http://localhost:3001";
 
 function App() {
@@ -11,16 +12,25 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const { user } = useUser();
 
+  
+
   useEffect(() => {
-    axios
-      .get(url)
-      .then((response) => {
-        setTasks(response.data);
-      })
-      .catch((error) => {
-        alert(error.response.data ? error.response.data.message : error);
-      });
-  }, []);
+    console.log("useEffect triggered, user:", user);
+    if (user && user.token) {
+      console.log("Token found, making request with token:", user.token);
+      const headers = { headers: { Authorization: user.token } };
+      axios
+        .get(url, headers)
+        .then((response) => {
+          setTasks(response.data);
+        })
+        .catch((error) => {
+          alert(error.response.data ? error.response.data.message : error);
+        });
+    } else {
+      console.log("No user or token found");
+    }
+  }, [user]);
 
   // Add task functionality
 
@@ -31,15 +41,18 @@ function App() {
       setTasks([...tasks, response.data]);
       setTask("");
     });
+  };
 
-    const deleteTask = (deleted) => {
+  // Delete task functionality
+
+  const deleteTask = (deleted) => {
       const headers = { headers: { Authorization: user.token } };
       console.log(headers);
       axios.delete(url + "/delete/" + deleted, headers).then((response) => {
         setTasks(tasks.filter((item) => item.id !== deleted));
       });
     };
-  };
+
 
   return (
     <div id="container">
@@ -65,5 +78,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;
