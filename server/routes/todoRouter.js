@@ -1,21 +1,25 @@
 import { pool } from "../helper/db.js";
 import { Router } from "express";
 import { auth } from "../helper/auth.js";
+import { getTasks, postTask } from "../controllers/TaskController.js";
 const router = Router();
 
-router.get("/", auth, (req, res, next) => {
+router.get("/", getTasks);
+/*router.get("/", auth, (req, res, next) => {
   pool.query("SELECT * FROM task", (err, result) => {
     if (err) {
       return next(err);
     }
     res.status(200).json(result.rows || []);
   });
-});
+});*/
+router.post("/create", auth, postTask);
 
-router.post("/create", auth, (req, res) => {
+
+/*router.post("/create", auth, (req, res) => {
   const { task } = req.body;
-  if (!task) {
-    return res.status(400).json({ error: "Task is required" });
+  if (!task || !task.description || !task.description.trim()) {
+    return res.status(400).json({ error: "Task description is required" });
   }
 
   pool.query(
@@ -28,7 +32,7 @@ router.post("/create", auth, (req, res) => {
       res.status(201).json(result.rows[0]);
     }
   );
-});
+});*/
 
 router.delete("/delete/:id", auth,  (req, res, next) => {
   const { id } = req.params;
